@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+
+    <meta charset="UTF-8"/>
+
+    <title>Insert title here</title>
+
+
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+
+</head>
+
+
+<body  onload="modify()">
+
+<div>
+
+    <form>
+
+    <label>*姓名：</label>
+     <input type="text" name="name"  size="30"  maxlength="20"  required="required">
+
+
+    <p>
+
+        <label>*性别：</label>
+
+        <input type="text" name="sex"  size="30"  maxlength="20"  required="required">
+
+    <p>
+
+        <label>分数：</label>
+
+        <input type="number" name="score"  size="30"  maxlength="20">
+    <p>
+
+        <input class="submit_button" type="submit" value="修改"  onclick="updatedatabase()"/>
+        <input type="reset" id="reset" value="重置" />
+    </form>
+
+</div>
+
+
+<!--<a href="/CRUD.html?name=">返回用户列表</a>-->
+
+
+<input  type="button"  value="返回用户列表" onclick="crud()">
+
+
+
+<script type="text/javascript">
+
+
+
+     function  crud(){
+
+         window.location.href="/crudupdate";
+
+     }
+
+
+
+     paValue = new Array();//创建一个用于保存具体值得数组
+
+
+    function modify(){
+
+    var loc = location.href;//获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+   // alert("我的地址"+loc);
+    var n1 = loc.length;//地址的总长
+    var n2 = loc.indexOf("?");//取得=号的位置
+    var parameter = decodeURI(loc.substr(n2+1, n1-n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+    var parameters  = parameter.split("&");//从&处拆分，返回字符串数组
+   // alert("参数列表"+parameters);
+
+
+
+
+     for (var i = 0; i < parameters.length; i++) {
+
+        var m1 = parameters[i].length;//获得每个键值对的长度
+        var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
+        var value = parameters[i].substr(m2+1, m1-m2);//获取每个键值对=号后面具体的值
+        paValue[i] = value;
+       // alert("参数值"+i+":"+value);
+    }
+    //alert("具体参数数组："+paValue);
+
+
+    var username=document.getElementsByName("name");
+
+    username[0].value=paValue[1];
+
+    var sex=document.getElementsByName("sex");
+    sex[0].value=paValue[2];
+
+    var score=document.getElementsByName("score");
+    score[0].value=paValue[3];
+
+
+    }
+
+
+    function  updatedatabase(){
+
+        var  name=document.getElementsByName("name")[0].value;
+
+        if(name=="")
+       { alert("用户名不能为空");
+
+          return false;
+
+        }
+
+        var  sex=document.getElementsByName("sex")[0].value;
+
+        if(sex=="")
+        {
+        alert("性别不能为空");
+
+        return false;
+        }
+
+         var  score=document.getElementsByName("score")[0].value;
+
+         var id=paValue[0];
+
+
+         		 $.ajax({
+                        url : "/update?id="+id+"&name="+name+"&sex="+sex+"&score="+score,//后台请求的数据
+                        dataType : "Json",//数据格式
+                        type : "get",//请求方式
+                        async : false,//是否异步请求
+                        success : function(data) {   //如果请求成功，返回数据。
+                        
+                                          alert("修改成功");
+
+                                          reset();
+                                          // window.location.href="/CRUD.html?";
+
+                        }
+                    });
+
+
+
+    }
+
+
+
+
+function reset(){
+
+    var username=document.getElementsByName("name");
+
+    username[0].value="";
+
+    var sex=document.getElementsByName("sex");
+    sex[0].value="";
+
+    var score=document.getElementsByName("score");
+    score[0].value="";
+
+}
+
+
+</script>
+
+
+</body>
+
+
+</html>

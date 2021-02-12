@@ -1,0 +1,71 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>分析图表</title>
+
+    <!--  <script th:src="@{/js/echarts.js}"></script>  -->
+
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+
+
+
+</head>
+
+<body>
+
+<div id="main" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '多条折线图'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+			    name:'星期',
+                data: ["mon","tue","web","thu","fri","sat","sun"]
+            },
+            yAxis: [
+
+		      {},
+			  {}
+
+			],
+            series: [{
+                name: '上衣销量',
+                type: 'line',
+                data: [1, 2, 3, 4, 5, 6,7],
+				yAxisIndex:0
+            },
+			{
+                name: '裤子销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20,65],
+				yAxisIndex:1
+            }
+
+			]
+        };
+
+
+        myChart.setOption(option);
+    </script>
+
+
+</body>
+
+
+
+
+</html>

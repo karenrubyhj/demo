@@ -1,0 +1,395 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+    <meta charset="UTF-8"/>
+
+    <title>Insert title here</title>
+
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <style type="text/css">
+
+  body {
+
+    width:100%;
+	height:100%;
+	margin:0px auto;
+	border:1px #ADFF2F solid;
+
+
+
+   }
+
+
+
+   .searchhead{
+
+    margin-top:100px;
+
+    background-color:#E0FFFF;
+
+   	position:relative;
+	width:100%;
+	height:100px;
+	text-align: left;
+
+    border-bottom-style:solid;
+    border-bottom-width:1px;
+    border-bottom-color:#ADFF2F;
+    border-top-style:none;
+
+   }
+
+
+  .searchform{
+
+
+
+   width:100%;
+
+   height:100px;
+
+  }
+
+    .searchbody{
+
+    position:relative;
+	width:100%;
+	height:800px;
+
+
+    }
+
+
+
+	.table{
+
+        background-color:#AFEEEE;
+		margin-top:0px;
+		margin-left:0px;
+		margin-right:0px;
+
+
+		font-size:20px;
+
+
+	}
+
+.greetleft{
+
+  position:absolute;
+  width:1440px;
+  height:80px;
+  margin-top:0px;
+  margin-left:0px;
+
+  font-size:36px;
+  text-align:left;
+  background-color:#E0FFFF;
+  color:red;
+
+
+
+
+}
+
+.greetright{
+   position:absolute;
+
+   margin-left:1440px;
+   margin-top:0px;
+
+   width:460px;
+   height:80px;
+   font-size:20px;
+   text-align: center;
+   background-color:#E0FFFF;
+
+   color:red;
+}
+
+
+
+
+
+    </style>
+
+
+
+
+
+
+</head>
+
+
+<body  onload="search()">
+
+
+<div class="greetleft">
+
+    学生管理平台
+
+</div>
+
+
+<div  class="greetright">
+
+   <!-- <p>欢迎您，<span th:text="${name}"></span>!  -->
+
+
+    欢迎您， <span th:text="${name}"></span>
+
+
+
+
+
+        <input type="button" name="logout" value="登出" onclick="logout()" />
+
+    </p>
+
+</div>
+
+
+<div class="searchhead">
+
+    <form>
+
+
+        用户名：<input type="text" id="name"  size="30"  maxlength="20">
+
+        &nbsp&nbsp&nbsp
+
+        <input class="submit_button" type="button" value="查询" onclick="search()">
+
+
+
+
+    </form>
+
+
+</div>
+
+<div  class="searchbody" >
+
+    <table class="table"  border="0" cellpadding="0" cellspacing="0">
+
+
+
+        <thead>
+        <tr>
+            <th>
+                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" name='item'  onclick="checkAll(this);"  />
+                    <span></span>
+                </label>
+            </th>
+
+            <th  style="display:none" >ID</th>
+
+            <th>姓名</th>
+
+            <th>性别</th>
+
+            <th>语文分数</th>
+
+            <th>
+                <input type="button" value="批量删除" onclick="delRow();"/>
+            </th>
+
+        </tr>
+
+        </thead>
+
+
+
+       <tbody  id="test">
+
+
+        <script type="text/javascript">
+
+   function logout(){
+
+        window.location.href="../login.html?";
+
+   }
+
+
+
+
+	//全选
+	function checkAll(obj){
+		var checked=obj.checked;
+		var item=document.getElementsByName("item");
+		for(var i=0;i<item.length;i++){
+			if(item[i].checked){
+				item[i].checked=null;
+			}else{
+				item[i].checked=checked;
+			}
+			item[i].checked=checked;
+		}
+	}
+
+//单个删除
+    function del(obj){
+		var parentTr=obj.parentNode.parentNode;
+
+	    var th = parentTr.getElementsByTagName('th');
+
+	    var x=th[1].innerHTML;
+
+		var parentTable = parentTr.parentNode;
+		parentTable.removeChild(parentTr);
+
+
+
+
+		 $.ajax({
+                        url : "/delete?id="+x,//后台请求的数据
+                        dataType : "Json",//数据格式
+                        type : "get",//请求方式
+                        async : false,//是否异步请求
+                        success : function(data) {   //如果请求成功，返回数据。
+                        
+                                          alert("删除成功");
+                        }
+                    });
+
+
+
+       window.location.reload();
+
+
+
+	}
+
+
+	//批量删除
+
+	// 也可以直接把数组str传给后台
+
+	delRow=function(){
+
+	    var str=[];
+
+		var items=document.getElementsByName("item");
+		for(var i=1;i<items.length;i++){
+			if(items[i].checked){
+				var parentNode=items[i].parentNode.parentNode;
+
+				var th = parentNode.getElementsByTagName('th');
+
+	            var x=th[1].innerHTML;
+
+	           str.push(x);
+
+
+
+				var tables=parentNode.parentNode;
+				tables.removeChild(parentNode);
+				i--;
+			}
+		}
+
+        // str.join(',');
+       //  alert(str);
+
+		 $.ajax({
+                        url : "/deleteall?ids="+str,//后台请求的数据
+                        dataType : "Json",//数据格式
+                        type : "get",//请求方式
+                        async : false,//是否异步请求
+                        success : function(data) {   //如果请求成功，返回数据。
+                        
+                                          alert("删除成功");
+                        }
+                    });
+
+
+
+       window.location.reload();
+
+
+
+
+	}
+
+
+//初始查询-------------------------------------------------------------
+
+                   function  search() {
+
+
+
+                            var x=$("#name").val();
+
+                           // alert("用户名："+x);
+
+                    $.ajax({
+                        url : "/getAllUser?name="+ x,//后台请求的数据
+                        dataType : "Json",//数据格式
+                        type : "get",//请求方式
+                        async : false,//是否异步请求
+                        success : function(data) {   //如果请求成功，返回数据。
+                        var html = "";
+                        for(var i=0;i<data.length;i++){    //遍历data数组
+                                var ls = data[i];   
+                                html +="<div>"+"<tr>"+"<th>"+"<input type='checkbox' name='item'/>"+"</th>"+"<th style='display:none'>"+ls.id+"</th>"+"<th>"+ls.name+"</th>"+"&nbsp&nbsp&nbsp&nbsp"+"<th>"+ls.sex+"</th>"+"<th>"+ls.score+"</th>"+"<th>"+"<input type='button' value='删除' onclick='del(this)'/>"+"</th>"+"<th>"+"<input type='button' value='编辑' onclick='update(this)'/>"+"</th>"+"</tr>"+"</div>";
+                            }
+                            $("#test").html(html); //在html页面id=test的标签里显示html内容
+                        }
+                    });
+                }
+
+
+//修改-------------------------------------------------------------------------------
+function update(obj){
+
+
+	    var parentTr=obj.parentNode.parentNode;
+
+	    var th = parentTr.getElementsByTagName('th');
+
+	    var id=th[1].innerHTML;
+	    var name=th[2].innerHTML;
+	    var sex=th[3].innerHTML;
+	    var score=th[4].innerHTML;
+
+        window.location.href="../CRUD-update.html?"+"id="+id+"&name="+name+"&sex="+sex+"&score="+score;
+
+
+}
+
+
+
+
+
+
+
+
+           </script>
+
+
+
+       </tbody>
+
+
+
+    </table>
+
+</div>
+
+
+</body>
+
+
+
+</html>

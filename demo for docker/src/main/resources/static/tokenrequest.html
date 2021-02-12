@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+</head>
+<body>
+<input type="button" value="Get" onclick="get()">
+
+<p>
+<div id="test"> </div>
+
+</body>
+<script type="text/javascript">
+
+function get(){
+    $.ajax({
+                        url : "/getAllUser?name=",//后台请求的数据
+                        dataType : "Json",//数据格式
+                        type : "get",//请求方式
+                        async : false,//是否异步请求
+                                    beforeSend: function(request) {
+                                            //将cookie中的token信息放于请求头中
+                                           request.setRequestHeader("authStr", $.cookie('authStr'));
+
+                                            alert($.cookie('authStr'));
+                                        },
+
+
+                                    success : function(data) {   //如果请求成功，返回数据。
+                        
+                                     var html = "";
+
+                        for(var i=0;i<data.length;i++){    //遍历data数组
+                                var ls = data[i];   
+                                html +="<div>"+"<tr>"+"<th>"+"<input type='checkbox' id='cbidx'/><label for='cbidx'></label>"+"</th>"+"<th>"+ls.name+"</th>"+"&nbsp&nbsp&nbsp&nbsp"+"<th>"+ls.sex+"</th>"+"<th>"+ls.score+"</th>"+"</tr>"+"</div>";
+                            }
+                            $("#test").html(html); //在html页面id=test的标签里显示html内容
+                        }
+                    });
+}
+
+
+function logout(){
+    $.ajax({
+        url: "/tokenAuth/token",
+        dataType: "json",
+        type:"DELETE",
+        beforeSend: function(request) {
+            //将cookie中的token信息放于请求头中
+            request.setRequestHeader("authStr", $.cookie('authStr'));
+        },
+        success:function(res){
+            console.log(res);
+        }
+    });
+}
+
+
+
+
+</script>
+
+
+
+</html>

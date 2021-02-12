@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>分析图表</title>
+
+    <!--  <script th:src="@{/js/echarts.js}"></script>  -->
+
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+
+
+
+
+    <style type="text/css">
+
+#part1{
+
+width: 800px;
+
+height: 600px;
+
+background-color: gray;
+
+float: left;
+
+}
+
+#part2{
+
+width: 800px;
+
+height: 600px;
+
+background-color: gray;
+
+float: left;
+
+}
+
+#part3{
+
+width: 800px;
+
+height: 600px;
+
+background-color: gray;
+
+float: left;
+
+clear: left;
+
+}
+
+#part4{
+
+
+width: 800px;
+
+height: 600px;
+
+background-color: gray;
+
+float: left;
+
+
+
+}
+
+.table{
+text-align:center
+
+
+border:1px solid #FF0099
+
+width: 800px;
+
+height: 600px;
+
+overflow:auto;
+
+
+
+}
+
+
+</style>
+
+</head>
+
+<body  onload="search()">
+
+<div id="part1"></div>
+
+<div id="part2"></div>
+
+<div id="part3"></div>
+
+<div id="part4" >
+
+    <table class="sample"  border="0" cellpadding="0" cellspacing="10">
+
+
+        <thead>
+        <tr>
+            <th>
+                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable"/>
+                    <span></span>
+                </label>
+            </th>
+
+            <th>姓名</th>
+
+            <th>性别</th>
+
+            <th>语文分数</th>
+
+        </tr>
+
+        </thead>
+
+
+    <tbody  id="test">
+
+    </tbody>
+
+    </table>
+
+</div>
+
+
+<script type="text/javascript">
+
+window.names = [];      //姓名数组（实际用来盛放X轴坐标值）
+window.scores =[];      //语文数组（实际用来盛放Y坐标值）
+
+window.scores1 =[];      //数学数组（实际用来盛放Y坐标值）
+window.scores2 =[];      //英语数组（实际用来盛放Y坐标值）
+
+html = "";
+</script>
+
+
+
+<script type="text/javascript">
+
+
+   function  search() {
+
+
+                    $.ajax({
+                        url : "/getUsers",//后台请求的数据
+                        dataType : "Json",//数据格式
+                        type : "get",//请求方式
+                        async : false,//是否异步请求
+                        success : function(data) {   //如果请求成功，返回数据。
+                        
+                        for(var i=0;i<data.length;i++){    //遍历data数组
+                             
+                                               var ls = data[i];   
+                              
+                                               window.names.push(ls.name);
+
+
+                                               window.scores.push(ls.score);
+
+                                               window.scores1.push(ls.score1);
+
+                                               window.scores2.push(ls.score2);
+
+                                               html +="<div>"+"<tr>"+"<th>"+ls.name+"</th>"+"&nbsp&nbsp&nbsp&nbsp"+"<th>"+ls.sex+"</th>"+"<th>"+ls.score+"</th>"+"</tr>"+"</div>";
+
+
+                                          }
+                          
+                                           // alert("names:"+names);
+
+                                           // alert("scores:"+scores);
+
+
+                                           // alert("scores:"+scores1);
+
+                                           // alert("scores:"+scores2);
+
+                                           $("#test").html(html); //在html页面id=test的标签里显示html内容
+
+                                            var myChart1 = echarts.init(document.getElementById('part1'));
+                                            var myChart2 = echarts.init(document.getElementById('part2'));
+                                            var myChart3 = echarts.init(document.getElementById('part3'));
+
+
+                                            // 表1
+                                            var option1 = {
+                                                title: {
+                                                    text: '【学生成绩统计图】'
+                                                },
+                                                tooltip: {},
+                                                legend: {
+
+                                                    width:30,
+                                                    height:10,
+                                                    orient:'horizontal',
+                                                    left:'center',
+                                                    data:['成绩'],
+                                                    tooltip:{
+                                                                   show:true
+                                                              }
+                                                },
+                                                xAxis: {
+                                                    name:'姓名',
+                                                    data: names
+                                                },
+                                                yAxis:{
+
+                                                     name:'语文成绩'
+                                                },
+
+
+                                                series: [
+                                                {
+                                                    name: '语文成绩',
+                                                    type: 'line',
+                                                    data: scores
+                                                }
+                                              ]
+
+                                            };
+
+                                            // 表2
+                                            var option2 = {
+                                                title: {
+                                                    text: '【学生成绩统计图】'
+                                                },
+                                                tooltip: {},
+                                                legend: {
+
+                                                    width:30,
+                                                    height:10,
+                                                    orient:'horizontal',
+                                                    left:'center',
+                                                    data:['成绩'],
+                                                    tooltip:{
+                                                                   show:true
+                                                              }
+                                                },
+                                                xAxis: {
+                                                    name:'姓名',
+                                                    data: names
+                                                },
+                                                yAxis:{
+
+                                                     name:'数学成绩'
+                                                },
+
+
+                                                series: [
+                                                {
+                                                    name: '数学成绩',
+                                                    type: 'line',
+                                                    data: scores1
+                                                }
+                                              ]
+
+                                            };
+
+                                        // 表3
+                                            var option3 = {
+                                                title: {
+                                                    text: '【学生成绩统计图】'
+                                                },
+                                                tooltip: {},
+                                                legend: {
+
+                                                    width:30,
+                                                    height:10,
+                                                    orient:'horizontal',
+                                                    left:'center',
+                                                    data:['成绩'],
+                                                    tooltip:{
+                                                                   show:true
+                                                              }
+                                                },
+                                                xAxis: {
+                                                    name:'姓名',
+                                                    data: names
+                                                },
+                                                yAxis:{
+
+                                                     name:'英语成绩'
+                                                },
+
+
+                                                series: [
+                                                {
+                                                    name: '英语成绩',
+                                                    type: 'line',
+                                                    data: scores2
+                                                }
+                                              ]
+
+                                            };
+
+
+                                            // 使用刚指定的配置项和数据显示图表。
+                                            myChart1.setOption(option1);
+                                            myChart2.setOption(option2);
+                                            myChart3.setOption(option3);
+
+
+                                       }
+
+                                 });
+
+                          }
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

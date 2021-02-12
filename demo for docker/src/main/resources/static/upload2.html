@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+
+    <title>Insert title here</title>
+</head>
+
+<body>
+
+<div class="box">
+    <a href="javascript:;" style="margin-top:-4px;" class="btn btn-default upload_image_input_trigger">
+
+        <h1>上传文件</h1>
+        <p>
+
+            <input class="upload_image_input" id="test" type="file" multiple="multiple">
+
+            <input type="submit" value="Submit" onclick="upload()"/>
+
+    </a>
+</div>
+
+<div  id="filelinks">
+
+
+<div>
+
+
+
+<script>
+
+//通过ajax上传文件，同时获取返回的链接，显示在页面上。
+
+cur_obj = $(this);
+formData = new FormData();
+
+
+            $(".upload_image_input").on('change',function(){
+
+            cur_obj = $(this);
+            var  file_obj  = this.files[0];
+            if(file_obj === undefined){
+                layer.msg('没有选择文件');
+                return;
+            }
+
+            if (file_obj.size > 2097152) {
+                layer.msg("图片大小不能超过2M");
+                return;
+            }
+
+
+           formData.append("file", file_obj);//文件对象
+
+         });
+
+
+      function  upload(){
+
+
+            $.ajax({
+                url: '/upload1',
+                type: 'POST',
+                dataType: "json",
+                data: formData,
+                cache: false,
+
+                //下面2行代码很重要，不能删掉，删掉报错
+
+                processData: false,   // jQuery不要去处理发送的数据
+                contentType: false,
+
+                success: function(data){
+
+
+                        alert(data.message);
+						alert('上传文件完成');
+						layer.msg('上传完成');
+
+
+                }
+
+
+
+        });
+    }
+</script>
+
+
+
+
+
+<table>
+</table>
+</body>
+
+<script type="text/javascript">
+
+</script>
+</html>

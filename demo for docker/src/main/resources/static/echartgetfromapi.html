@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <!-- <script type="text/javascript" src="js/echarts.js"></script>-->
+
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+
+
+
+</head>
+
+<body  onload="search()">
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+
+<script type="text/javascript">
+
+window.names = [];      //姓名数组（实际用来盛放X轴坐标值）
+window.scores =[];      //分数数组（实际用来盛放Y坐标值）
+
+
+</script>
+
+
+<div id="main" style="width: 600px;height:600px;"></div>
+
+
+
+<script type="text/javascript">
+
+
+
+
+                   function  search() {
+
+
+                    $.ajax({
+                        url : "/getUsers",//后台请求的数据
+                        dataType : "Json",//数据格式
+                        type : "get",//请求方式
+                        async : false,//是否异步请求
+                        success : function(data) {   //如果请求成功，返回数据。
+                        var html = "";
+                        for(var i=0;i<data.length;i++){    //遍历data数组
+                             
+                                               var ls = data[i];   
+                              
+                                               window.names.push(ls.name);
+
+
+                                               window.scores.push(ls.score);
+
+                                          }
+                          
+
+                                          // alert("names:"+names);
+
+                                          // alert("scores:"+scores);
+
+                                            var myChart = echarts.init(document.getElementById('main'));
+
+                                            // 指定图表的配置项和数据
+                                            var option = {
+                                                title: {
+                                                    text: '【学生成绩统计图】'
+                                                },
+                                                tooltip: {},
+                                                legend: {
+
+                                                    width:30,
+                                                    height:10,
+                                                    orient:'horizontal',
+                                                    left:'center',
+                                                    data:['成绩','学生'],
+                                                    tooltip:{
+                                                                   show:true
+                                                              }
+                                                },
+                                                xAxis: {
+                                                    name:'姓名',
+                                                    data: names
+                                                },
+                                                yAxis: {
+                                                     name:'成绩'
+                                                },
+                                                series: [{
+                                                    name: '成绩',
+                                                    type: 'line',
+                                                    data: scores
+                                                }]
+                                            };
+
+                                            // 使用刚指定的配置项和数据显示图表。
+                                            myChart.setOption(option);
+
+                                       }
+
+                                 });
+
+                          }
+
+
+
+
+
+		</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.example.demo.dao.UserDao">
+
+
+    <select id="getAllUser" resultType="com.example.demo.domain.USER" >
+        SELECT * FROM user;
+    </select>
+
+
+    <select id="getTotalCount" resultType="int" >
+        SELECT count(*) FROM user;
+    </select>
+
+
+    <select id="getTotalCountByName" resultType="int" parameterType="String">
+        SELECT count(*) FROM user where name=#{name};
+    </select>
+
+
+    <select id="UserListForPage" resultType="com.example.demo.domain.USER"   parameterType="int">
+
+        SELECT * FROM user limit  #{index},#{currentCount};
+
+    </select>
+
+
+    <select id="getbynameforpage" resultType="com.example.demo.domain.USER" >
+
+        SELECT * FROM user   where  name=#{name} limit  #{index},#{currentCount};
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.example.demo.domain.USER" useGeneratedKeys="true" keyProperty="id">
+        insert into user (
+
+        <if test="name != null and name != ''">
+            name
+        </if>
+
+        <if test="password != null and password != ''">
+            ,password
+        </if>
+
+        <if test="sex != null and sex != ''">
+            ,sex
+        </if>
+
+
+        <if test="score != null and score != ''">
+            ,score
+        </if>
+        <if test="score1 != null and score1 != ''">
+            ,score1
+        </if>
+        <if test="score2 != null and score2 != ''">
+            ,score2
+        </if>
+
+        ) values (
+
+
+        <if test="name != null and name != ''">
+            #{name}
+        </if>
+
+        <if test="password != null and password != ''">
+            ,#{password}
+        </if>
+
+        <if test="sex != null and sex != ''">
+            ,#{sex}
+        </if>
+
+        <if test="score != null and score != ''">
+            ,#{score,jdbcType=SMALLINT}
+        </if>
+        <if test="score1 != null and score1 != ''">
+            ,#{score1,jdbcType=SMALLINT}
+        </if>
+        <if test="score2 != null and score2 != ''">
+            ,#{score2,jdbcType=SMALLINT}
+        </if>
+
+        )
+
+
+    </insert>
+
+
+    <select id="getbyName" resultType="com.example.demo.domain.USER"   parameterType="String">
+
+        select * from  user    where  name = #{name};
+
+
+    </select>
+
+
+
+    <delete id="delete"  parameterType="int">
+        DELETE FROM user  WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.example.demo.domain.USER" >
+        UPDATE user  SET name=#{name},sex=#{sex},score=#{score}  WHERE id=#{id};
+        <!-- 属性字段名区分大小写 -->
+    </update>
+
+
+
+</mapper>
+
+
+<!--
+<mapper namespace="com.example.demo.dao.TestDao">
+
+    <select id="getAllTest" resultType="com.example.demo.domain.Test" >
+
+
+
+    SELECT  B.VALUE as  场站名, SUM(A.IN_TOTAL+A.OUT_TOTAL) as 客流量  FROM  MONITOR_PASSENGER_FLOW_OTHER A, SYS_DICT B   WHERE  A.STATION_ID=B.CODE  AND  B.TYPE='STATION'  AND  to_char(A.COLLECT_TIME,'yyyy-mm-dd')='2020-03-13'  GROUP BY A.STATION_ID,B.VALUE  UNION (SELECT'天通苑北', SUM(C.IN_TOTAL+C.OUT_TOTAL) FROM  MONITOR_PASSENGER_FLOW_HALL C WHERE  to_char(C.COLLECT_TIME,'yyyy-mm-dd')='2020-03-13'  )
+
+
+    </select>
+
+
+</mapper>
+
+-->
